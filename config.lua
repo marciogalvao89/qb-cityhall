@@ -44,7 +44,7 @@ Config.DrivingSchools = {
             title = "Driving School"
         },
         instructors = {
-            "DJD56142",
+            "PWY16116",
             "DXT09752",
             "SRI85140",
         }
