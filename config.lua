@@ -41,7 +41,7 @@ Config.DrivingSchools = {
             display = 4,
             scale = 0.65,
             colour = 3,
-            title = "Driving School"
+            title = "Escola de Condução"
         },
         instructors = {
             "PWY16116",
