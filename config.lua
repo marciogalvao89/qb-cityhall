@@ -11,20 +11,30 @@ Config.Cityhalls = {
             display = 4,
             scale = 0.65,
             colour = 0,
-            title = "City Services"
+            title = "Centro de Emprego"
         },
         licenses = {
             ["id_card"] = {
-                label = "ID Card",
+                label = "Cartão de Cidadão",
                 cost = 50,
             },
             ["driver_license"] = {
-                label = "Driver License",
+                label = "Carta de Mota",
                 cost = 50,
-                metadata = "driver"
+                metadata = "Carta de Mota"
+            },
+            ["driver_license"] = {
+                label = "Carta de Carro",
+                cost = 50,
+                metadata = "Carta de Carro"
+            },
+            ["driver_license"] = {
+                label = "Carta de Pesados",
+                cost = 50,
+                metadata = "Carta de Pesados"
             },
             ["weaponlicense"] = {
-                label = "Weapon License",
+                label = "Porte de Armas",
                 cost = 50,
                 metadata = "weapon"
             },
@@ -34,8 +44,8 @@ Config.Cityhalls = {
 
 Config.DrivingSchools = {
     { -- Driving School 1
-        coords = vec3(240.3, -1379.89, 33.74),
-        showBlip = true,
+        coords = vec3(240.3, -1379.89, -1133.74),
+        showBlip = false,
         blipData = {
             sprite = 225,
             display = 4,
@@ -64,7 +74,7 @@ Config.Peds = {
             debugPoly = false
         }
     },
-    -- Driving School Ped
+    --[[ Driving School Ped
     {
         model = 'a_m_m_eastsa_02',
         coords = vec4(240.91, -1379.2, 32.74, 138.96),
@@ -74,5 +84,5 @@ Config.Peds = {
             length = 3.0,
             width = 3.0
         }
-    }
+    }]]
 }
