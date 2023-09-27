@@ -9,6 +9,7 @@ local inCityhallPage = false
 local inRangeCityhall = false
 local inRangeDrivingSchool = false
 local pedsSpawned = false
+local table_clone = table.clone
 local blips = {}
 
 -- Functions
@@ -41,17 +42,7 @@ local function getClosestSchool()
     return closest
 end
 
-local function getJobs()
-    QBCore.Functions.TriggerCallback('qb-cityhall:server:receiveJobs', function(result)
-        SendNUIMessage({
-            action = 'setJobs',
-            jobs = result
-        })
-    end)
-end
-
 local function setCityhallPageState(bool, message)
-    getJobs()
     if message then
         local action = bool and "open" or "close"
         SendNUIMessage({
@@ -93,7 +84,7 @@ local function initBlips()
     for i = 1, #Config.Cityhalls do
         local hall = Config.Cityhalls[i]
         if hall.showBlip then
-            blips[#blips + 1] = createBlip({
+            blips[#blips+1] = createBlip({
                 coords = hall.coords,
                 sprite = hall.blipData.sprite,
                 display = hall.blipData.display,
@@ -107,7 +98,7 @@ local function initBlips()
     for i = 1, #Config.DrivingSchools do
         local school = Config.DrivingSchools[i]
         if school.showBlip then
-            blips[#blips + 1] = createBlip({
+            blips[#blips+1] = createBlip({
                 coords = school.coords,
                 sprite = school.blipData.sprite,
                 display = school.blipData.display,
@@ -157,7 +148,7 @@ local function spawnPeds()
             end
             if opts then
                 exports['qb-target']:AddTargetEntity(ped, {
-                    options = { opts },
+                    options = {opts},
                     distance = 2.0
                 })
             end
@@ -165,7 +156,7 @@ local function spawnPeds()
             local options = current.zoneOptions
             if options then
                 local zone = BoxZone:Create(current.coords.xyz, options.length, options.width, {
-                    name = "zone_cityhall_" .. ped,
+                    name = "zone_cityhall_"..ped,
                     heading = current.coords.w,
                     debugPoly = false,
                     minZ = current.coords.z - 3.0,
@@ -208,8 +199,8 @@ local function deletePeds()
     pedsSpawned = false
 end
 
-
 -- Events
+
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     PlayerData = QBCore.Functions.GetPlayerData()
     isLoggedIn = true
@@ -226,10 +217,6 @@ RegisterNetEvent('QBCore:Player:SetPlayerData', function(val)
     PlayerData = val
 end)
 
-RegisterNetEvent('qb-cityhall:Client:AddCityJob', function()
-    getJobs()
-end)
-
 RegisterNetEvent('qb-cityhall:client:getIds', function()
     TriggerServerEvent('qb-cityhall:server:getIDs')
 end)
@@ -243,7 +230,7 @@ RegisterNetEvent('qb-cityhall:client:sendDriverEmail', function(charinfo)
         TriggerServerEvent('qb-phone:server:sendNewMail', {
             sender = Lang:t('email.sender'),
             subject = Lang:t('email.subject'),
-            message = Lang:t('email.message', { gender = gender, lastname = charinfo.lastname, firstname = charinfo.firstname, phone = charinfo.phone }),
+            message =  Lang:t('email.message', {gender = gender, lastname = charinfo.lastname, firstname = charinfo.firstname, phone = charinfo.phone}),
             button = {}
         })
     end)
@@ -276,7 +263,7 @@ end)
 
 RegisterNUICallback('requestLicenses', function(_, cb)
     local licensesMeta = PlayerData.metadata["licences"]
-    local availableLicenses = Config.Cityhalls[closestCityhall].licenses
+    local availableLicenses = table_clone(Config.Cityhalls[closestCityhall].licenses)
     for license, data in pairs(availableLicenses) do
         if data.metadata and not licensesMeta[data.metadata] then
             availableLicenses[license] = nil
@@ -311,6 +298,12 @@ end)
 CreateThread(function()
     initBlips()
     spawnPeds()
+    QBCore.Functions.TriggerCallback('qb-cityhall:server:receiveJobs', function(result)
+        SendNUIMessage({
+            action = 'setJobs',
+            jobs = result
+        })
+    end)
     if not Config.UseTarget then
         while true do
             local sleep = 1000
